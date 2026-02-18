@@ -1,552 +1,289 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AniManSpace</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cosmic AI</title>
 
-        body {
-            min-height: 100vh;
-            background: radial-gradient(circle at 20% 30%, #0a0f2e, #030514);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 12px;
-            position: relative;
-            overflow-x: auto;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 
-        /* kosmik effektlar */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at 70% 20%, rgba(30, 90, 150, 0.15) 0%, transparent 40%),
-                        radial-gradient(circle at 20% 80%, rgba(80, 40, 120, 0.2) 0%, transparent 45%),
-                        repeating-linear-gradient(45deg, rgba(255,255,255,0.01) 0px, rgba(255,255,255,0.01) 2px, transparent 2px, transparent 6px);
-            pointer-events: none;
-            z-index: 0;
-        }
+<style>
 
-        .app-container {
-            width: 100%;
-            max-width: 380px;
-            background: rgba(8, 12, 25, 0.75);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(90, 140, 255, 0.25);
-            border-radius: 32px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(70, 130, 255, 0.2), 0 0 30px rgba(0, 180, 255, 0.3);
-            overflow: hidden;
-            position: relative;
-            z-index: 2;
-            color: white;
-        }
+/* ================= GLOBAL ================= */
 
-        /* yulduzchalar */
-        .app-container::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: radial-gradient(2px 2px at 15px 60px, #fff, rgba(0,0,0,0)),
-                              radial-gradient(2px 2px at 75px 340px, #fff, rgba(0,0,0,0)),
-                              radial-gradient(3px 3px at 280px 120px, #b0d0ff, rgba(0,0,0,0)),
-                              radial-gradient(2px 2px at 200px 480px, #fff, rgba(0,0,0,0)),
-                              radial-gradient(4px 4px at 50px 540px, #b5dcff, rgba(0,0,0,0)),
-                              radial-gradient(2px 2px at 330px 620px, #fff, rgba(0,0,0,0));
-            background-repeat: no-repeat;
-            opacity: 0.6;
-            pointer-events: none;
-            z-index: -1;
-        }
+:root {
+  --primary: #7f5af0;
+  --secondary: #2cb67d;
+  --bg-dark: #0f0f1b;
+  --glass: rgba(255,255,255,0.08);
+}
 
-        .app-inner {
-            padding: 20px 16px 12px 16px;
-            position: relative;
-            z-index: 3;
-            background: linear-gradient(180deg, rgba(5, 10, 22, 0.3) 0%, rgba(2, 6, 15, 0.8) 100%);
-            backdrop-filter: blur(5px);
-        }
+* {
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Inter', sans-serif;
+}
 
-        /* header */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-        }
+body {
+  background: var(--bg-dark);
+  color:white;
+  overflow-x:hidden;
+}
 
-        .logo {
-            font-size: 22px;
-            font-weight: 700;
-            letter-spacing: -0.3px;
-            background: linear-gradient(135deg, #fff, #b2cbff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 0 0 10px #3a7fff;
-        }
+/* ================= ANIMATED SPACE BG ================= */
 
-        .user-count {
-            font-size: 15px;
-            font-weight: 600;
-            background: rgba(20, 40, 75, 0.7);
-            padding: 6px 12px;
-            border-radius: 40px;
-            border: 1px solid rgba(90, 160, 255, 0.4);
-            color: #bfdcff;
-            backdrop-filter: blur(5px);
-            box-shadow: 0 0 10px rgba(0,160,255,0.3);
-        }
+body::before {
+  content:"";
+  position:fixed;
+  width:200%;
+  height:200%;
+  background: radial-gradient(circle at 30% 30%, #1a1a40, transparent),
+              radial-gradient(circle at 70% 70%, #2a0066, transparent),
+              radial-gradient(circle at 50% 50%, #000022, #000);
+  animation: moveBg 20s linear infinite;
+  z-index:-2;
+}
 
-        /* AI assistant */
-        .ai-card {
-            background: linear-gradient(145deg, rgba(18, 25, 55, 0.8), rgba(5, 10, 30, 0.95));
-            border-radius: 24px;
-            padding: 16px 18px;
-            margin-bottom: 24px;
-            border: 1px solid rgba(70, 150, 255, 0.4);
-            box-shadow: 0 8px 20px rgba(0, 20, 50, 0.8), 0 0 20px rgba(40, 130, 255, 0.3);
-            backdrop-filter: blur(8px);
-            position: relative;
-            overflow: hidden;
-        }
+@keyframes moveBg {
+  0% { transform:translate(0,0); }
+  50% { transform:translate(-10%, -10%); }
+  100% { transform:translate(0,0); }
+}
 
-        .ai-card::before {
-            content: '';
-            position: absolute;
-            top: -10px;
-            right: 10px;
-            width: 120px;
-            height: 120px;
-            background: radial-gradient(circle, rgba(80, 180, 255, 0.2) 0%, transparent 70%);
-            border-radius: 50%;
-            filter: blur(15px);
-        }
+/* ================= NAVBAR ================= */
 
-        .ai-label {
-            font-size: 13px;
-            font-weight: 500;
-            color: #9bc0ff;
-            letter-spacing: 0.8px;
-            margin-bottom: 6px;
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
+.navbar {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:20px 8%;
+  position:fixed;
+  width:100%;
+  backdrop-filter: blur(20px);
+  background:rgba(0,0,0,0.3);
+  z-index:100;
+}
 
-        .ai-label span {
-            background: #1f54b0;
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            color: white;
-        }
+.logo {
+  font-weight:800;
+  font-size:1.4rem;
+  background:linear-gradient(45deg, #7f5af0, #00c6ff);
+  -webkit-background-clip:text;
+  color:transparent;
+}
 
-        .ai-prompt {
-            font-size: 18px;
-            font-weight: 500;
-            color: white;
-            text-shadow: 0 0 10px #3f9eff;
-            line-height: 1.3;
-            word-break: break-word;
-        }
+.nav-links a {
+  margin-left:30px;
+  text-decoration:none;
+  color:white;
+  transition:0.3s;
+}
 
-        .ai-prompt span {
-            color: #8bc1ff;
-            font-weight: 400;
-        }
+.nav-links a:hover {
+  color:var(--primary);
+}
 
-        /* New Episodes section */
-        .section-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 14px;
-            color: white;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            letter-spacing: -0.2px;
-        }
+/* ================= HERO ================= */
 
-        .section-title::before {
-            content: '●';
-            color: #3a9eff;
-            font-size: 22px;
-            line-height: 1;
-        }
+.hero {
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  text-align:center;
+  padding:0 10%;
+}
 
-        .episodes-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-            margin-bottom: 24px;
-        }
+.hero h1 {
+  font-size:3.5rem;
+  background:linear-gradient(90deg,#7f5af0,#2cb67d,#00c6ff);
+  -webkit-background-clip:text;
+  color:transparent;
+  animation: glowText 3s infinite alternate;
+}
 
-        .episode-item {
-            background: rgba(12, 20, 40, 0.6);
-            border-radius: 20px;
-            padding: 14px 16px;
-            border: 1px solid rgba(70, 130, 220, 0.3);
-            backdrop-filter: blur(5px);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.5);
-        }
+@keyframes glowText {
+  from { text-shadow:0 0 10px #7f5af0; }
+  to { text-shadow:0 0 25px #00c6ff; }
+}
 
-        .episode-name {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: #ecf3ff;
-        }
+.hero p {
+  margin-top:20px;
+  max-width:600px;
+  opacity:0.8;
+}
 
-        .progress-bar {
-            display: flex;
-            gap: 6px;
-            align-items: center;
-        }
+.cta-btn {
+  margin-top:30px;
+  padding:15px 40px;
+  border-radius:50px;
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+  background:linear-gradient(45deg,#7f5af0,#00c6ff);
+  color:white;
+  transition:0.4s;
+  box-shadow:0 0 20px #7f5af0;
+}
 
-        .progress-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 10px;
-            background: rgba(255,255,255,0.2);
-        }
+.cta-btn:hover {
+  transform:scale(1.1);
+  box-shadow:0 0 40px #00c6ff;
+}
 
-        .progress-dot.filled {
-            background: #3f9eff;
-            box-shadow: 0 0 8px #0080ff;
-        }
+/* ================= GLASS CARD SECTION ================= */
 
-        /* Community Chat */
-        .chat-section {
-            background: rgba(7, 14, 30, 0.5);
-            border-radius: 24px;
-            padding: 16px;
-            margin-bottom: 24px;
-            border: 1px solid rgba(50, 100, 200, 0.3);
-            backdrop-filter: blur(5px);
-        }
+.features {
+  padding:100px 8%;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:40px;
+}
 
-        .chat-message {
-            margin-bottom: 16px;
-            border-bottom: 1px solid rgba(90, 150, 255, 0.15);
-            padding-bottom: 12px;
-        }
+.card {
+  background:var(--glass);
+  backdrop-filter:blur(20px);
+  padding:40px;
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,0.1);
+  transition:0.4s;
+}
 
-        .chat-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-            color: #adc9ff;
-            font-size: 15px;
-            font-weight: 500;
-        }
+.card:hover {
+  transform:translateY(-10px);
+  box-shadow:0 0 30px #7f5af0;
+}
 
-        .chat-name {
-            color: #b7d6ff;
-        }
+/* ================= CHAT DEMO ================= */
 
-        .chat-time {
-            color: #6d8fc0;
-            font-size: 13px;
-        }
+.chat-section {
+  padding:100px 8%;
+  display:flex;
+  justify-content:center;
+}
 
-        .chat-text {
-            color: #e0ecff;
-            font-size: 16px;
-            padding-left: 5px;
-            word-break: break-word;
-        }
+.chat-box {
+  width:100%;
+  max-width:600px;
+  background:var(--glass);
+  backdrop-filter:blur(20px);
+  padding:30px;
+  border-radius:20px;
+}
 
-        .chat-input {
-            margin-top: 12px;
-            color: #8daeeb;
-            font-size: 15px;
-            background: rgba(0, 10, 30, 0.6);
-            padding: 12px 14px;
-            border-radius: 40px;
-            border: 1px solid #2d4f88;
-            backdrop-filter: blur(5px);
-        }
+.chat-messages {
+  height:200px;
+  overflow-y:auto;
+  margin-bottom:20px;
+}
 
-        /* Offline Downloads */
-        .downloads-list {
-            background: rgba(5, 12, 28, 0.7);
-            border-radius: 24px;
-            padding: 16px;
-            margin-bottom: 24px;
-            border: 1px solid #2d4a7c;
-            backdrop-filter: blur(5px);
-        }
+.message {
+  margin-bottom:10px;
+}
 
-        .download-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 0;
-            border-bottom: 1px solid #1f3760;
-        }
+.user {
+  text-align:right;
+  color:#00c6ff;
+}
 
-        .download-item:last-child {
-            border-bottom: none;
-        }
+.ai {
+  text-align:left;
+  color:#7f5af0;
+}
 
-        .download-title {
-            font-size: 17px;
-            font-weight: 500;
-            color: #f0f6ff;
-        }
+.chat-input {
+  display:flex;
+}
 
-        .stars {
-            color: #ffb83a;
-            letter-spacing: 2px;
-            font-size: 16px;
-            filter: drop-shadow(0 0 5px #ffb83a80);
-        }
+.chat-input input {
+  flex:1;
+  padding:10px;
+  border:none;
+  border-radius:10px 0 0 10px;
+}
 
-        /* Yukari profile */
-        .profile-card {
-            background: linear-gradient(120deg, #0f1a33, #040b1a);
-            border-radius: 28px;
-            padding: 18px 18px;
-            margin-bottom: 20px;
-            border: 1px solid #4d7ec9;
-            box-shadow: 0 0 20px #1d4c9e50;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            backdrop-filter: blur(8px);
-        }
+.chat-input button {
+  padding:10px 20px;
+  border:none;
+  border-radius:0 10px 10px 0;
+  background:linear-gradient(45deg,#7f5af0,#00c6ff);
+  color:white;
+  cursor:pointer;
+}
 
-        .profile-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+/* ================= RESPONSIVE ================= */
 
-        .profile-avatar {
-            width: 48px;
-            height: 48px;
-            border-radius: 40px;
-            background: linear-gradient(145deg, #325ec9, #152c5c);
-            border: 2px solid #a0cbff;
-            box-shadow: 0 0 20px #3f9eff;
-        }
+@media(max-width:768px){
+  .hero h1 { font-size:2.5rem; }
+}
 
-        .profile-info {
-            font-weight: 600;
-        }
-
-        .profile-name {
-            font-size: 20px;
-            color: white;
-            margin-bottom: 2px;
-        }
-
-        .profile-level {
-            font-size: 15px;
-            color: #9ebeff;
-        }
-
-        .join-btn {
-            background: transparent;
-            border: 1.5px solid #4d94ff;
-            padding: 8px 18px;
-            border-radius: 40px;
-            color: #b7d6ff;
-            font-weight: 600;
-            font-size: 15px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 0 12px #1e5bc0;
-            transition: 0.2s;
-            cursor: default;
-        }
-
-        /* footer navigation */
-        .footer-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 8px 5px 8px;
-            border-top: 1px solid #2a4270;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-
-        .nav-item {
-            color: #afc7f0;
-            font-size: 13px;
-            font-weight: 500;
-            padding: 6px 8px;
-            border-radius: 40px;
-            transition: 0.2s;
-            background: rgba(20, 30, 60, 0.4);
-            backdrop-filter: blur(5px);
-            border: 1px solid transparent;
-        }
-
-        .nav-item.active {
-            color: white;
-            border: 1px solid #4e8cff;
-            background: #122858;
-            box-shadow: 0 0 15px #0044ff80;
-        }
-
-        /* extra kosmic detallar */
-        .glow-effect {
-            position: absolute;
-            width: 200px;
-            height: 200px;
-            background: radial-gradient(circle, #274c9e20, transparent 70%);
-            bottom: 0;
-            right: 0;
-            z-index: -1;
-        }
-
-        hr {
-            border: 0.5px solid #1f3a66;
-            margin: 16px 0;
-        }
-
-        .spacer {
-            height: 4px;
-        }
-    </style>
+</style>
 </head>
+
 <body>
-    <div class="app-container">
-        <div class="app-inner">
 
-            <!-- Header: AniManSpace + 2.5k -->
-            <div class="header">
-                <div class="logo">AniManSpace</div>
-                <div class="user-count">2.5k</div>
-            </div>
+<nav class="navbar">
+  <div class="logo">CosmicAI</div>
+  <div class="nav-links">
+    <a href="#">Home</a>
+    <a href="#">Features</a>
+    <a href="#">Demo</a>
+    <a href="#">Pricing</a>
+  </div>
+</nav>
 
-            <!-- AI assistant card -->
-            <div class="ai-card">
-                <div class="ai-label"><span>✨</span> AI assistant</div>
-                <div class="ai-prompt">sovuq gradient soch,<br><span>neon ko‘zlar, skafandr</span></div>
-            </div>
+<section class="hero">
+  <h1>Next Generation Artificial Intelligence</h1>
+  <p>Experience hyper-intelligent AI powered by cosmic-level neural networks.</p>
+  <button class="cta-btn">Try AI Now</button>
+</section>
 
-            <!-- New Episodes -->
-            <div class="section-title">New Episodes</div>
-            <div class="episodes-grid">
+<section class="features">
+  <div class="card">
+    <h3>⚡ Ultra Fast</h3>
+    <p>Optimized neural engine delivering instant results.</p>
+  </div>
+  <div class="card">
+    <h3>🤖 Smart AI</h3>
+    <p>Context-aware, adaptive artificial intelligence.</p>
+  </div>
+  <div class="card">
+    <h3>🔒 Secure</h3>
+    <p>End-to-end encrypted AI processing.</p>
+  </div>
+</section>
 
-                <!-- Episode 3 (1) -->
-                <div class="episode-item">
-                    <div class="episode-name">Episode 3</div>
-                    <div class="progress-bar">
-                        <div class="progress-dot filled"></div>
-                        <div class="progress-dot filled"></div>
-                        <div class="progress-dot filled"></div>
-                        <div class="progress-dot"></div>
-                    </div>
-                </div>
-
-                <!-- Episode 3 (2) -->
-                <div class="episode-item">
-                    <div class="episode-name">Episode 3</div>
-                    <div class="progress-bar">
-                        <div class="progress-dot filled"></div>
-                        <div class="progress-dot filled"></div>
-                        <div class="progress-dot filled"></div>
-                        <div class="progress-dot"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Community Chat -->
-            <div class="section-title">Community Chat</div>
-            <div class="chat-section">
-
-                <div class="chat-message">
-                    <div class="chat-header">
-                        <span class="chat-name">Isomm Sters</span>
-                        <span class="chat-time">19:05</span>
-                    </div>
-                    <div class="chat-text">Orus</div>
-                    <div style="color:#a2c3ff; margin-top:4px;">Beviedori alaspont</div>
-                </div>
-
-                <div class="chat-message">
-                    <div class="chat-header">
-                        <span class="chat-name">Yukari</span>
-                        <span class="chat-time">12:16</span>
-                    </div>
-                    <div class="chat-text">Beviedori alaspont</div>
-                </div>
-
-                <div class="chat-message">
-                    <div class="chat-header">
-                        <span class="chat-name">Kosmosa</span>
-                        <span class="chat-time">12:16</span>
-                    </div>
-                    <div class="chat-text">Momemias peel ling aates</div>
-                </div>
-
-                <div class="chat-input">Kosmosga xabar yoz...</div>
-            </div>
-
-            <!-- Offline Downloads -->
-            <div class="section-title">Offline Downloads</div>
-            <div class="downloads-list">
-                <div class="download-item">
-                    <span class="download-title">Episode 3</span>
-                    <span class="stars">★★★★☆</span>
-                </div>
-                <div class="download-item">
-                    <span class="download-title">Episode 3</span>
-                    <span class="stars">★★★★☆</span>
-                </div>
-                <div class="download-item">
-                    <span class="download-title">Episode 3</span>
-                    <span class="stars"></span>
-                </div>
-            </div>
-
-            <!-- Yukari profile + Join Community -->
-            <div class="profile-card">
-                <div class="profile-left">
-                    <div class="profile-avatar"></div>
-                    <div class="profile-info">
-                        <div class="profile-name">Yukari</div>
-                        <div class="profile-level">Lv. 7</div>
-                    </div>
-                </div>
-                <div class="join-btn">Join Community</div>
-            </div>
-
-            <!-- Footer navigation -->
-            <div class="footer-nav">
-                <span class="nav-item active">Home</span>
-                <span class="nav-item">Anime & Manhwa</span>
-                <span class="nav-item">Community</span>
-                <span class="nav-item">Offline</span>
-                <span class="nav-item">Profile</span>
-            </div>
-
-            <!-- kosmik qatlam -->
-            <div class="glow-effect"></div>
-        </div>
+<section class="chat-section">
+  <div class="chat-box">
+    <div class="chat-messages" id="chat"></div>
+    <div class="chat-input">
+      <input type="text" id="input" placeholder="Ask AI something...">
+      <button onclick="sendMessage()">Send</button>
     </div>
+  </div>
+</section>
+
+<script>
+
+function sendMessage(){
+  const input = document.getElementById("input");
+  const chat = document.getElementById("chat");
+
+  if(input.value.trim() === "") return;
+
+  chat.innerHTML += `<div class="message user">${input.value}</div>`;
+
+  setTimeout(()=>{
+    chat.innerHTML += `<div class="message ai">AI is generating response...</div>`;
+    chat.scrollTop = chat.scrollHeight;
+  },500);
+
+  input.value="";
+}
+
+</script>
+
 </body>
-  </html>
+    </html>
