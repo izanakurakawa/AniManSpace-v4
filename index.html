@@ -1,4 +1,93 @@
-<!DOCTYPE html>
+<!-- ================= NAVBAR / TAG BAR ================= -->
+<nav class="navbar">
+  <div class="logo">AniManSpace</div>
+  <div class="nav-links">
+    <a href="#" class="nav-item active">Home</a>
+    <a href="#" class="nav-item">AI Core</a>
+    <a href="#" class="nav-item">Marketplace</a>
+    <a href="#" class="nav-item">About</a>
+  </div>
+</nav>
+
+<style>
+/* ================= NAVBAR ================= */
+.navbar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:20px 8%;
+  position:fixed;
+  width:100%;
+  background:rgba(7,7,17,0.85);
+  backdrop-filter:blur(15px);
+  z-index:1000;
+}
+
+/* LOGO */
+.logo{
+  font-weight:800;
+  font-size:1.4rem;
+  letter-spacing:1px;
+  background:linear-gradient(90deg,var(--pink),var(--blue));
+  -webkit-background-clip:text;
+  color:transparent;
+  cursor:pointer;
+}
+
+/* NAV LINKS */
+.nav-links{
+  display:flex;
+  gap:40px;
+}
+
+.nav-item{
+  position:relative;
+  text-decoration:none;
+  color:#ccc;
+  font-weight:500;
+  font-size:1rem;
+  padding:5px 0;
+  transition:0.3s;
+}
+
+/* Neon underline effect */
+.nav-item::after{
+  content:"";
+  position:absolute;
+  left:0;
+  bottom:-4px;
+  width:0%;
+  height:3px;
+  background:linear-gradient(90deg,var(--pink),var(--blue));
+  border-radius:2px;
+  transition:0.3s;
+}
+
+.nav-item:hover::after{
+  width:100%;
+}
+
+.nav-item.active::after{
+  width:100%;
+}
+
+/* Hover color glow */
+.nav-item:hover{
+  color:white;
+  text-shadow:0 0 8px var(--blue),0 0 8px var(--pink);
+}
+</style>
+
+<script>
+// ================= JS ACTIVE TAB =================
+const navItems = document.querySelectorAll('.nav-item');
+navItems.forEach(item=>{
+  item.addEventListener('click',()=>{
+    navItems.forEach(i=>i.classList.remove('active'));
+    item.classList.add('active');
+  });
+});
+</script><!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
